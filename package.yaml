@@ -1,0 +1,29 @@
+name:    clip-compression
+version: "0.0.0"
+
+dependencies:
+- base
+- yesod-core
+- directory
+- aeson
+- process
+- MissingH
+- yesod-form
+- text
+
+# The library contains all of our application code. The executable
+# defined below is just a thin wrapper.
+library:
+  source-dirs: src
+
+# Runnable executable for our application
+executables:
+  clip-compression:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - clip-compression
