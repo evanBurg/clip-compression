@@ -20,3 +20,6 @@ cabal.sandbox.config
 *~
 \#*
 my-project.cabal
+ffmpeg2pass*
+clips/*
+settings.yml

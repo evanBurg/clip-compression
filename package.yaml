@@ -10,6 +10,12 @@ dependencies:
 - MissingH
 - yesod-form
 - text
+- http-client
+- http-client-tls
+- http-types
+- utf8-string
+- bytestring >=0.10 && <0.11
+- yaml
 
 # The library contains all of our application code. The executable
 # defined below is just a thin wrapper.

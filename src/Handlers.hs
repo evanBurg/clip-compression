@@ -3,6 +3,7 @@
 {-# LANGUAGE DeriveGeneric #-}
 {-# OPTIONS_GHC -Wno-unrecognised-pragmas #-}
 {-# HLINT ignore "Use newtype instead of data" #-}
+{-# LANGUAGE NamedFieldPuns #-}
 module Handlers where
 
 import Foundation
@@ -13,6 +14,7 @@ import Data.Text
 import GHC.Generics
 import Data.Aeson
 import Compress (compressVideo)
+import SendMessage (sendMessage)
 
 data CompressVideoResponse = CompressVideoResponse {
     success :: Bool
@@ -26,13 +28,17 @@ uploadDirectory = "clips/"
 
 putCompressR :: Handler Value
 putCompressR = do
+    App { webhookUrl } <- getYesod
     uploadedFile <- runInputPost $ iopt fileField "clipFile"
     case uploadedFile of 
         Just file -> do
             let filename = unpack $ fileName file
                 destPath = uploadDirectory <> filename
             liftIO $ fileMove file destPath
-            scc <- liftIO $ compressVideo filename
+            (scc, mPath) <- liftIO $ compressVideo filename
+            case mPath of
+                Just path -> liftIO $ sendMessage webhookUrl path
+                Nothing -> liftIO $ print "No clip path"
             returnJson CompressVideoResponse {
                 success = scc
             }
