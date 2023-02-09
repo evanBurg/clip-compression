@@ -20,6 +20,16 @@ data App = App {
     port :: Int
 } deriving (Show, Generic, ToJSON, FromJSON)
 
+data CompressVideoPayload = CompressVideoPayload {
+    title :: Maybe String,
+    description :: Maybe String,
+    tags :: Maybe [String]
+} deriving (Generic, Show, FromJSON, ToJSON)
+
+newtype CompressVideoResponse = CompressVideoResponse {
+    success :: Bool
+} deriving (Generic, Show, FromJSON, ToJSON)
+
 mkYesodData "App" $(parseRoutesFile "routes.yesodroutes")
 
 instance Yesod App where
