@@ -16,6 +16,9 @@ dependencies:
 - utf8-string
 - bytestring >=0.10 && <0.11
 - yaml
+- wai
+- warp
+- wai-cors
 
 # The library contains all of our application code. The executable
 # defined below is just a thin wrapper.
