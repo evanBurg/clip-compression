@@ -6,6 +6,7 @@
 {-# LANGUAGE InstanceSigs #-}
 {-# OPTIONS_GHC -Wno-deprecations #-}
 {-# LANGUAGE DeriveAnyClass #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
 module Foundation where
 
 import Yesod.Core
@@ -14,6 +15,7 @@ import GHC.Generics
 import Data.Aeson.TH
 import qualified Data.ByteString.Char8 as BS
 import qualified Data.Yaml as Y
+import Yesod.Form
 
 data App = App {
     webhookUrl :: String,
@@ -21,9 +23,9 @@ data App = App {
 } deriving (Show, Generic, ToJSON, FromJSON)
 
 data CompressVideoPayload = CompressVideoPayload {
-    title :: Maybe String,
-    description :: Maybe String,
-    tags :: Maybe [String]
+    title :: String,
+    description :: String,
+    tags :: String
 } deriving (Generic, Show, FromJSON, ToJSON)
 
 newtype CompressVideoResponse = CompressVideoResponse {
@@ -35,3 +37,5 @@ mkYesodData "App" $(parseRoutesFile "routes.yesodroutes")
 instance Yesod App where
     maximumContentLength _ _ = Just $ 60 * 1024 * 1024 -- 60 megabytes
 
+instance RenderMessage App FormMessage where
+    renderMessage _ _ = defaultFormMessage

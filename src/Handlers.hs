@@ -26,23 +26,20 @@ postCompressR :: Handler Value
 postCompressR = do
     App { webhookUrl } <- getYesod
     -- payload <- requireCheckJsonBody :: Handler CompressVideoPayload
-    -- title <- lookupPostParam "title"
-    -- desc <- lookupPostParam "description"
-    -- tags <- lookupPostParam "tags"
-    let payload = CompressVideoPayload {
-        title = Just "Test title"
-        , description = Just "Test description"
-        , tags = Just ["one", "two", "three"]
-    }
+    title <- runInputPost $ ireq textField "title"
+    desc <- runInputPost $ ireq textField "description"
+    tags <- runInputPost $ ireq textField "tags"
     uploadedFile <- runInputPost $ iopt fileField "clipFile"
+    let payload = CompressVideoPayload {
+        title = unpack title
+        , description = unpack desc
+        , tags = unpack tags
+    }
     -- returnJson payload
     case uploadedFile of 
         Just file -> do
-            liftIO $ print "HERE"
             let filename = unpack $ fileName file
                 destPath = uploadDirectory <> filename
-            liftIO $ print filename
-            liftIO $ print destPath
             liftIO $ fileMove file destPath
             (scc, mPath) <- liftIO $ compressVideo filename
             case mPath of

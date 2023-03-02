@@ -33,14 +33,14 @@ instance FromJSON DiscordMessageBody where
         <*> v .: "embeds"
 
 data DiscordEmbedBody = DiscordEmbedBody {
-    _title :: Maybe String,
-    _description :: Maybe String,
+    _title :: String,
+    _description :: String,
     _color :: Int,
     _fields :: Maybe [DiscordEmbedField]
 } deriving (Show)
 instance ToJSON DiscordEmbedBody where
   toJSON (DiscordEmbedBody { _title = _title, _description = _description, _color = _color, _fields = _fields }) =
-    object [ "contents" .= _title
+    object [ "title" .= _title
            , "description"  .= _description
            , "color"  .= _color
            , "fields"  .= _fields
@@ -77,8 +77,7 @@ postFormData manager url headers body = do
 
 createDiscordEmbedBody :: CompressVideoPayload -> Data.ByteString.Internal.ByteString
 createDiscordEmbedBody CompressVideoPayload { title, description, tags } = do
-    let tagString = Data.List.intercalate ", " $ fromMaybe [""] tags
-        tagField = DiscordEmbedField { _name = "tags", _value = tagString }
+    let tagField = DiscordEmbedField { _name = "tags", _value = tags }
         embedBody = DiscordEmbedBody { _title = title, _description = description, _color = 7888639, _fields = Just [tagField]}
     toStrict $ encode $ DiscordMessageBody { _contents = Nothing, _embeds = Just [embedBody] }
 
