@@ -33,5 +33,5 @@ newtype CompressVideoResponse = CompressVideoResponse {
 mkYesodData "App" $(parseRoutesFile "routes.yesodroutes")
 
 instance Yesod App where
-    maximumContentLength _ _ = Just $ 40 * 1024 * 1024 -- 40 megabytes
+    maximumContentLength _ _ = Just $ 60 * 1024 * 1024 -- 60 megabytes
 

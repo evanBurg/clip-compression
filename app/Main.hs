@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 import Application () -- for YesodDispatch instance
 import Foundation
 import Yesod.Core
@@ -15,6 +16,6 @@ main = do
       Left pe -> print "Could not parse yml file"
       Right app -> do
         plainApp <- toWaiApp app
-        run (port app) $ simpleCors plainApp
+        run (port app) $ cors (\_-> Just simpleCorsResourcePolicy { corsMethods = ["PUT", "POST"] }) plainApp
 
     
